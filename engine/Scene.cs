@@ -32,13 +32,13 @@ namespace engine
 
         public bool engineUpdate(double delta)
         {
-            ecs.updateSystems(sceneList, (float)delta);
+            ecs.updateSystems(sceneList, delta);
             return update(delta);
         }
 
         public void engineRender(double delta)
         {
-            ecs.updateSystems(renderPipeline, (float)delta);
+            ecs.updateSystems(renderPipeline, delta);
             render(delta);
         }
 

@@ -30,7 +30,7 @@ namespace engine.ecs
             entities.Remove(entity);
         }
 
-        public void updateSystems(SystemList systems, float delta)
+        public void updateSystems(SystemList systems, double delta)
         {
             for(int i = 0; i < systems.size(); i++)
             {
@@ -98,7 +98,7 @@ namespace engine.ecs
             return res;
         }
 
-        private void updateSystemsWithMultipleComponents(BaseSystem system, float delta)
+        private void updateSystemsWithMultipleComponents(BaseSystem system, double delta)
         {
             List<Type> types = system.getComponentTypes();
             List<Flag> flags = system.getComponentFlags();

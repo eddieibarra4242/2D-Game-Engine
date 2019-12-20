@@ -3,7 +3,7 @@ namespace engine.math
     public class Transform
     {
         public Vector2 position;
-        public float rotation;
+        public double rotation;
         public Vector2 scale;
 
         public Transform()
@@ -13,7 +13,7 @@ namespace engine.math
             this.scale = new Vector2(1, 1);
         }
 
-        public Matrix3 getTramsformationMatrix()
+        public Matrix3 getTransformationMatrix()
         {
             Matrix3 pos = new Matrix3().initTranslation(position);
             Matrix3 rot = new Matrix3().initRotation(rotation);
@@ -32,12 +32,12 @@ namespace engine.math
             this.position = position;
         }
 
-        public float getRotation()
+        public double getRotation()
         {
             return rotation;
         }
 
-        public void setRotation(float rotation)
+        public void setRotation(double rotation)
         {
             this.rotation = rotation;
         }

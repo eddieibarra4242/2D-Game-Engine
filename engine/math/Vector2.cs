@@ -1,79 +1,9 @@
-#define SINGLE_PRECISION
-
 using System;
 
 namespace engine.math
 {
     public class Vector2
     {
-#if (SINGLE_PRECISION)
-
-        private float x;
-        private float y;
-
-        public Vector2(float x, float y)
-        {
-            this.x = x;
-            this.y = y;
-        }
-
-        public float length()
-        {
-            return (float)Math.Sqrt(x * x + y * y);
-        }
-
-        public float dot(Vector2 r)
-        {
-            return x * r.getX() + y * r.getY();
-        }
-
-        public Vector2 lerp(Vector2 dest, float lerpAmt)
-        {
-            return ((dest - this) * lerpAmt) + this;
-        }
-
-        public static Vector2 operator +(Vector2 v, float f)
-        {
-            return new Vector2(v.getX() + f, v.getY() + f);
-        }
-
-        public static Vector2 operator -(Vector2 v, float f)
-        {
-            return new Vector2(v.getX() - f, v.getY() - f);
-        }
-
-        public static Vector2 operator *(Vector2 v, float f)
-        {
-            return new Vector2(v.getX() * f, v.getY() * f);
-        }
-
-        public static Vector2 operator /(Vector2 v, float f)
-        {
-            return new Vector2(v.getX() / f, v.getY() / f);
-        }
-
-        public void setX(float x)
-        {
-            this.x = x;
-        }
-
-        public float getX()
-        {
-            return x;
-        }
-
-        public void setY(float y)
-        {
-            this.y = y;
-        }
-
-        public float getY()
-        {
-            return y;
-        }
-
-#elif (DOUBLE_PRECISION)
-
         private double x;
         private double y;
 
@@ -137,8 +67,7 @@ namespace engine.math
         {
             return y;
         }
-
-#endif
+        
         public Vector2 normalized()
         {
             return this / length();

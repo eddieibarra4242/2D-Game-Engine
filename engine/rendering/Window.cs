@@ -124,9 +124,9 @@ namespace engine.rendering
             Glfw.Terminate();
         }
 
-        public static float getAR()
+        public static double getAR()
         {
-            return (float)width / (float)height;
+            return (double)width / (double)height;
         }
 
         public static int getWidth()

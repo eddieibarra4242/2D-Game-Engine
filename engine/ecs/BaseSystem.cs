@@ -75,10 +75,10 @@ namespace engine.ecs
             return componentFlags;
         }
 
-        public virtual void preComponentUpdate(float delta) {}
+        public virtual void preComponentUpdate(double delta) {}
 
-        public virtual void componentUpdate(BaseComponent[] components, float delta) {}
+        public virtual void componentUpdate(BaseComponent[] components, double delta) {}
 
-        public virtual void postComponentUpdate(float delta) {}
+        public virtual void postComponentUpdate(double delta) {}
     }
 }
