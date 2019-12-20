@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\coding\\C# vscode\\2d\\2d.csproj": {}
+    "D:\\coding\\C# vscode\\2D-Game-Engine\\2d.csproj": {}
   },
   "projects": {
-    "D:\\coding\\C# vscode\\2d\\2d.csproj": {
+    "D:\\coding\\C# vscode\\2D-Game-Engine\\2d.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\coding\\C# vscode\\2d\\2d.csproj",
+        "projectUniqueName": "D:\\coding\\C# vscode\\2D-Game-Engine\\2d.csproj",
         "projectName": "2d",
-        "projectPath": "D:\\coding\\C# vscode\\2d\\2d.csproj",
+        "projectPath": "D:\\coding\\C# vscode\\2D-Game-Engine\\2d.csproj",
         "packagesPath": "C:\\Users\\Eddie\\.nuget\\packages\\",
-        "outputPath": "D:\\coding\\C# vscode\\2d\\obj\\",
+        "outputPath": "D:\\coding\\C# vscode\\2D-Game-Engine\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Eddie\\AppData\\Roaming\\NuGet\\NuGet.Config",

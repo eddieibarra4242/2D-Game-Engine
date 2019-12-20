@@ -25,7 +25,7 @@ namespace Game
     {
         public static void Main(string[] args)
         {
-            Window window = new Window(1280, 720, "Ghey");
+            Window window = new Window(1280, 720, "2D Engine");
             Engine engine = new Engine(window, new Game(window), 60);
             engine.run();
         }
