@@ -1,0 +1,11 @@
+d:\coding\C# vscode\2d\bin\Debug\netcoreapp3.0\2d.exe
+D:\coding\C# vscode\2d\bin\Debug\netcoreapp3.0\2d.deps.json
+D:\coding\C# vscode\2d\bin\Debug\netcoreapp3.0\2d.runtimeconfig.json
+D:\coding\C# vscode\2d\bin\Debug\netcoreapp3.0\2d.runtimeconfig.dev.json
+d:\coding\C# vscode\2d\bin\Debug\netcoreapp3.0\2d.dll
+d:\coding\C# vscode\2d\bin\Debug\netcoreapp3.0\2d.pdb
+d:\coding\C# vscode\2d\obj\Debug\netcoreapp3.0\2d.csprojAssemblyReference.cache
+d:\coding\C# vscode\2d\obj\Debug\netcoreapp3.0\2d.AssemblyInfoInputs.cache
+d:\coding\C# vscode\2d\obj\Debug\netcoreapp3.0\2d.AssemblyInfo.cs
+d:\coding\C# vscode\2d\obj\Debug\netcoreapp3.0\2d.dll
+d:\coding\C# vscode\2d\obj\Debug\netcoreapp3.0\2d.pdb

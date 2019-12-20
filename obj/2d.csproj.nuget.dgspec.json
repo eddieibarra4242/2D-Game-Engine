@@ -1,0 +1,60 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\coding\\C# vscode\\2d\\2d.csproj": {}
+  },
+  "projects": {
+    "D:\\coding\\C# vscode\\2d\\2d.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\coding\\C# vscode\\2d\\2d.csproj",
+        "projectName": "2d",
+        "projectPath": "D:\\coding\\C# vscode\\2d\\2d.csproj",
+        "packagesPath": "C:\\Users\\Eddie\\.nuget\\packages\\",
+        "outputPath": "D:\\coding\\C# vscode\\2d\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Eddie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net472": {
+          "dependencies": {
+            "GLFW.NET": {
+              "target": "Package",
+              "version": "[0.9.7.1, )"
+            },
+            "OpenTK": {
+              "target": "Package",
+              "version": "[3.1.0, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "win7-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

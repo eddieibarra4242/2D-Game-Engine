@@ -1,0 +1,11 @@
+d:\coding\C# vscode\2d\obj\Debug\net472\2d.csprojAssemblyReference.cache
+d:\coding\C# vscode\2d\obj\Debug\net472\2d.AssemblyInfoInputs.cache
+d:\coding\C# vscode\2d\obj\Debug\net472\2d.AssemblyInfo.cs
+d:\coding\C# vscode\2d\bin\Debug\net472\2d.exe.config
+d:\coding\C# vscode\2d\bin\Debug\net472\2d.exe
+d:\coding\C# vscode\2d\bin\Debug\net472\2d.pdb
+d:\coding\C# vscode\2d\bin\Debug\net472\WrapperGLFW.dll
+d:\coding\C# vscode\2d\bin\Debug\net472\OpenTK.dll
+D:\coding\C# vscode\2d\obj\Debug\net472\2d.csproj.CopyComplete
+d:\coding\C# vscode\2d\obj\Debug\net472\2d.exe
+d:\coding\C# vscode\2d\obj\Debug\net472\2d.pdb
