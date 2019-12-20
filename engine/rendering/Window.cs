@@ -6,6 +6,9 @@ using OpenTK.Graphics;
 
 using System.Runtime.InteropServices;
 
+using engine.input;
+using engine.input.openGL;
+
 namespace engine.rendering
 {
     public class GlfwWinInfo : OpenTK.Platform.IWindowInfo
@@ -46,6 +49,7 @@ namespace engine.rendering
         private GLFWwindow window;
         private static int width;
         private static int height;
+        private IInput input;
 
         public Window(int width, int height, string title) : this(width, height, title, false) {}
 
@@ -81,6 +85,8 @@ namespace engine.rendering
             Glfw.SwapInterval(0);
 
             initializeOTK();
+
+            input = new OpenGLInput(window, width, height);
         }
 
         private void initializeOTK()
@@ -103,6 +109,7 @@ namespace engine.rendering
 
         public void update()
         {
+            input.update();
             Glfw.PollEvents();
         }
 
@@ -130,6 +137,11 @@ namespace engine.rendering
         public static int getHeight()
         {
             return height;
+        }
+
+        public IInput getInput()
+        {
+            return input;
         }
     }
 }
