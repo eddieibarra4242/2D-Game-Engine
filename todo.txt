@@ -1,0 +1,18 @@
+Rendering:
+    -make sprites
+    -give them colliders
+    -easy animation system
+        -load animation frames off of a sprite sheet
+        -frame timing system?
+    -tilemaps
+Physics:
+    -integration
+    -colliders (AABB and Sphere)
+    -collision
+Misc:
+    -loading and saving levels
+        -tilemaps (actual level)
+        -player data
+        -generic
+    -add 32-bit support (floats instead of doubles, etc)
+        -easy way to switch between each platform (32 - 64)

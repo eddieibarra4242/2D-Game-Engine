@@ -2,18 +2,18 @@ using System.Collections.Generic;
 
 namespace engine.ecs
 {
-    public static class EntityRegistry
-    {
-        private static int entityCounter = 0;
-
-        public static int getEntityID()
-        {
-            return entityCounter++;
-        }
-    }
-
     public class Entity
     {
+        private static class EntityRegistry
+        {
+            private static int entityCounter = 0;
+
+            public static int getEntityID()
+            {
+                return entityCounter++;
+            }
+        }
+
         private int entityID;
         private List<BaseComponent> components;
 

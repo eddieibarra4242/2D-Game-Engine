@@ -43,6 +43,7 @@ namespace engine.ecs
 
                     if(components == null)
                     {
+                        curSystem.postComponentUpdate(delta);
                         continue;
                     }
 
@@ -51,7 +52,7 @@ namespace engine.ecs
                         curSystem.componentUpdate(new BaseComponent[] {comp}, delta);
                     }
                 }
-                else
+                else if(curSystem.getComponentTypes().Count > 1)
                 {
                     updateSystemsWithMultipleComponents(curSystem, delta);
                 }

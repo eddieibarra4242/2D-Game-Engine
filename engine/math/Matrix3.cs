@@ -29,8 +29,8 @@ namespace engine.math
 
         public Matrix3 initRotation(double rotation)
         {
-            double sin = (double)Math.Sin(rotation);
-            double cos = (double)Math.Cos(rotation);
+            double sin = Math.Sin(rotation);
+            double cos = Math.Cos(rotation);
 
             return new Matrix3(new double [,] { {cos, -sin, 0},
                                                {sin, cos, 0},
@@ -46,9 +46,9 @@ namespace engine.math
 
         public Vector2 mul(Vector2 r)
         {
-            double[] v = new double[3];
+            double[] v = new double[2];
 
-            for(int x = 0; x < 3; x++)
+            for(int x = 0; x < 2; x++)
             {
                 v[x] = m[x, 0] * r.getX() +
                        m[x, 1] * r.getY() +
@@ -95,7 +95,7 @@ namespace engine.math
 
                 for(int y = 0; y < 3; y++)
                 {
-                    result = result + m[x, y] + (y == 2 ? "" : " ");
+                    result = result + string.Format("{0:n3}", m[x, y]) + (y == 2 ? "" : " ");
                 }
 
                 result = result + "]\n";

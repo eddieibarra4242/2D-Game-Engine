@@ -7,6 +7,8 @@ using engine.input;
 
 using OpenTK.Graphics.OpenGL;
 
+using System;
+
 namespace Game
 {
     public class InputComponent : BaseComponent
@@ -54,6 +56,8 @@ namespace Game
             {
                 move(transform, new Vector2(1, 0), 0.05f);
             }
+
+            Console.WriteLine(transform.getTransformationMatrix() + "\n");
         }
     }
 
