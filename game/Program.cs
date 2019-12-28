@@ -7,8 +7,6 @@ using engine.input;
 
 using OpenTK.Graphics.OpenGL;
 
-using System;
-
 namespace Game
 {
     public class InputComponent : BaseComponent
@@ -17,6 +15,11 @@ namespace Game
         public KeyButton down;
         public KeyButton left;
         public KeyButton right;
+    }
+
+    public class TextureComponent : BaseComponent
+    {
+        public Texture texture;
     }
 
     public class MovementSystem : BaseSystem
@@ -56,8 +59,6 @@ namespace Game
             {
                 move(transform, new Vector2(1, 0), 0.05f);
             }
-
-            Console.WriteLine(transform.getTransformationMatrix() + "\n");
         }
     }
 
@@ -68,15 +69,15 @@ namespace Game
         public RectRenderer() : base()
         {
             addComponentType(typeof(TransformComponent));
+            addComponentType(typeof(TextureComponent), Flag.OPTIONAL);
             vertices = new Vector2[] {new Vector2(-1, -1),
-            new Vector2(1, -1),
-            new Vector2(1, 1),
-            new Vector2(-1, 1)};
+            new Vector2( 1, -1),
+            new Vector2( 1,  1),
+            new Vector2(-1,  1)};
         }
 
         public override void preComponentUpdate(double delta)
         {
-            GL.ClearColor(0, 0, 0, 0);
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
@@ -91,14 +92,27 @@ namespace Game
                 transformedVertices[i] = transformMat.mul(vertices[i]);
             }
 
+            TextureComponent texture = (TextureComponent)components[1];
+
+            if(texture != null)
+            {
+                texture.texture.bind(0);
+            }
+
+            GL.PushMatrix();
             GL.Begin(PrimitiveType.Quads);
 
             GL.Vertex2(transformedVertices[0].getX() / Window.getAR(), transformedVertices[0].getY());
+            GL.TexCoord2(1, 1);
             GL.Vertex2(transformedVertices[1].getX() / Window.getAR(), transformedVertices[1].getY());
+            GL.TexCoord2(1, 0);
             GL.Vertex2(transformedVertices[2].getX() / Window.getAR(), transformedVertices[2].getY());
+            GL.TexCoord2(0, 0);
             GL.Vertex2(transformedVertices[3].getX() / Window.getAR(), transformedVertices[3].getY());
+            GL.TexCoord2(0, 1);
 
             GL.End();
+            GL.PopMatrix();
         }
     }
 
@@ -115,7 +129,10 @@ namespace Game
             inputComp.left = new KeyButton(window.getInput(), glfw3.Key.A);
             inputComp.right = new KeyButton(window.getInput(), glfw3.Key.D);
 
-            getECS().makeEntity(transformComponent, inputComp);
+            TextureComponent texcomp = new TextureComponent();
+            texcomp.texture = new Texture("./res/textures/wood.jpg", (float)TextureMinFilter.Linear);
+
+            getECS().makeEntity(transformComponent, inputComp, texcomp);
 
             addSceneSystem(new MovementSystem());
 

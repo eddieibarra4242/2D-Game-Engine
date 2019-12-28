@@ -73,7 +73,7 @@ namespace engine.ecs
                     continue;
                 }
 
-                if(components[i].Count < min && flags[i] == Flag.FLAG_NONE)
+                if(components[i].Count < min && flags[i] == Flag.NONE)
                 {
                     index = i;
                     min = components.Count;
@@ -124,12 +124,12 @@ namespace engine.ecs
                 for(int j = 0; j < components.Count; j++)
                 {
                     //check if type is good
-                    if(components[j] == null && flags[j] == Flag.FLAG_NONE)
+                    if(components[j] == null && flags[j] == Flag.NONE)
                     {
                         isValid = false;
                         break;
                     }
-                    else if(components[j] == null && flags[j] == Flag.FLAG_OPTIONAL)
+                    else if(components[j] == null && flags[j] == Flag.OPTIONAL)
                     {
                         compParams.Add(null);
                         continue;
@@ -139,7 +139,7 @@ namespace engine.ecs
                     BaseComponent component = findComponentWithEntityHandle(components[j], entityID);
 
                     //component could not be found and is needed don't update system
-                    if(component == null && flags[j] == Flag.FLAG_NONE)
+                    if(component == null && flags[j] == Flag.NONE)
                     {
                         isValid = false;
                         break;

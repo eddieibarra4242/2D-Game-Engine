@@ -3,6 +3,7 @@ using System;
 using glfw3;
 using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 using System.Runtime.InteropServices;
 
@@ -87,6 +88,10 @@ namespace engine.rendering
             initializeOTK();
 
             input = new OpenGLInput(window, width, height);
+
+            
+            GL.Enable(EnableCap.Texture2D);
+            GL.ClearColor(0, 0, 0, 0);
         }
 
         private void initializeOTK()

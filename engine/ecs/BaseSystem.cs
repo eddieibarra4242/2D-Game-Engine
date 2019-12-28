@@ -38,8 +38,8 @@ namespace engine.ecs
 
     public enum Flag
     {
-        FLAG_NONE,
-        FLAG_OPTIONAL
+        NONE,
+        OPTIONAL
     }
 
     public abstract class BaseSystem
@@ -56,7 +56,7 @@ namespace engine.ecs
         public void addComponentType(Type type)
         {
             componentTypes.Add(type);
-            componentFlags.Add(Flag.FLAG_NONE);
+            componentFlags.Add(Flag.NONE);
         }
 
         public void addComponentType(Type type, Flag flag)
