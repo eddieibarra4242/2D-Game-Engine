@@ -2,15 +2,17 @@ namespace engine.math
 {
     public class Transform
     {
-        public Vector2 position;
-        public double rotation;
-        public Vector2 scale;
+        private Vector2 position;
+        private double rotation;
+        private Vector2 scale;
 
-        public Transform()
+        public Transform() : this(new Vector2(0, 0), 0, new Vector2(1, 1)) {}
+
+        public Transform(Vector2 postion, float angle, Vector2 scale)
         {
-            this.position = new Vector2(0, 0);
-            this.rotation = 0;
-            this.scale = new Vector2(1, 1);
+            this.position = postion;
+            this.rotation = angle;
+            this.scale = scale;
         }
 
         public Matrix3 getTransformationMatrix()

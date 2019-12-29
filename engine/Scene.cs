@@ -6,12 +6,18 @@ namespace engine
     {
         private ECS ecs;
         private SystemList sceneList;
+        private SystemList simulation;
+        private SystemList collisionDetection;
+        private SystemList collisionResponse;
         private SystemList renderPipeline;
 
         public Scene()
         {
             ecs = new ECS();
             sceneList = new SystemList();
+            simulation = new SystemList();
+            collisionDetection = new SystemList();
+            collisionResponse = new SystemList();
             renderPipeline = new SystemList();
         }
 
@@ -25,6 +31,21 @@ namespace engine
             sceneList.addSystem(sceneSystem);
         }
 
+        public void addSimulatorSystem(BaseSystem simulator)
+        {
+            simulation.addSystem(simulator);
+        }
+
+        public void addCollisionDetectionSystem(BaseSystem collisionDetector)
+        {
+            collisionDetection.addSystem(collisionDetector);
+        }
+
+        public void addCollisionResponseSystem(BaseSystem responseSystem)
+        {
+            collisionResponse.addSystem(responseSystem);
+        }
+
         public SystemList getRenderPipeLine()
         {
             return renderPipeline;
@@ -33,7 +54,13 @@ namespace engine
         public bool engineUpdate(double delta)
         {
             ecs.updateSystems(sceneList, delta);
-            return update(delta);
+            bool result = update(delta);
+
+            ecs.updateSystems(simulation, delta);
+            ecs.updateSystems(collisionDetection, delta);
+            ecs.updateSystems(collisionResponse, delta);
+
+            return result;
         }
 
         public void engineRender(double delta)

@@ -3,62 +3,87 @@ using engine.math;
 using engine.rendering;
 using engine.ecs;
 using engine.components;
-using engine.input;
+using engine.physics;
 
 using OpenTK.Graphics.OpenGL;
 
+using System;
+using System.Collections.Generic;
+
 namespace Game
 {
-    public class InputComponent : BaseComponent
+    public class VelocityComponent : BaseComponent
     {
-        public KeyButton up;
-        public KeyButton down;
-        public KeyButton left;
-        public KeyButton right;
+        public Vector2 velocity;
+
+        public VelocityComponent(Vector2 velocity)
+        {
+            this.velocity = velocity;
+        }
     }
 
-    public class TextureComponent : BaseComponent
+    public class ColliderComponent : BaseComponent
     {
-        public Texture texture;
+        public AABB collider;
+
+        public ColliderComponent(AABB collider)
+        {
+            this.collider = collider;
+        }
     }
 
-    public class MovementSystem : BaseSystem
+    public class RectSimulator : BaseSystem
     {
-        public MovementSystem() : base()
+        public RectSimulator()
         {
             addComponentType(typeof(TransformComponent));
-            addComponentType(typeof(InputComponent));
+            addComponentType(typeof(VelocityComponent));
         }
-
-        private void move(Transform transform, Vector2 dir, double amt)
+        
+        public override void componentUpdate(BaseComponent[] components, double delta)
         {
-            transform.setPosition(transform.getPosition() + (dir * amt));
+            Transform transform = ((TransformComponent)components[0]).transform;
+            VelocityComponent vel = (VelocityComponent)components[1];
+
+            Vector2 newPosition = transform.getPosition();
+            MotionIntegrators.forestRuth(delta, ref newPosition, ref vel.velocity, new Vector2(0, 0));
+            transform.setPosition(newPosition);
+        }
+    }
+
+    public class RectColliderSys : BaseSystem
+    {
+        private List<AABB> colliders;
+
+        public RectColliderSys()
+        {
+            addComponentType(typeof(TransformComponent));
+            addComponentType(typeof(ColliderComponent));
+
+            colliders = new List<AABB>();
         }
 
         public override void componentUpdate(BaseComponent[] components, double delta)
         {
             Transform transform = ((TransformComponent)components[0]).transform;
-            InputComponent inputer = (InputComponent)components[1];
+            ColliderComponent coll = (ColliderComponent)components[1];
 
-            if(inputer.up.isDown())
+            coll.collider.translate(transform.getPosition());
+
+            colliders.Add(coll.collider);
+        }
+
+        public override void postComponentUpdate(double delta)
+        {
+            for(int i = 0; i < colliders.Count; i++)
             {
-                move(transform, new Vector2(0, 1), 0.05f);
+                for(int j = i + 1; j < colliders.Count; j++)
+                {
+                    Console.WriteLine(colliders[i].intersect(colliders[j]));
+                }
             }
 
-            if(inputer.down.isDown())
-            {
-                move(transform, new Vector2(0, -1), 0.05f);
-            }
-
-            if(inputer.left.isDown())
-            {
-                move(transform, new Vector2(-1, 0), 0.05f);
-            }
-
-            if(inputer.right.isDown())
-            {
-                move(transform, new Vector2(1, 0), 0.05f);
-            }
+            colliders.Clear();
         }
     }
 
@@ -69,7 +94,6 @@ namespace Game
         public RectRenderer() : base()
         {
             addComponentType(typeof(TransformComponent));
-            addComponentType(typeof(TextureComponent), Flag.OPTIONAL);
             vertices = new Vector2[] {new Vector2(-1, -1),
             new Vector2( 1, -1),
             new Vector2( 1,  1),
@@ -90,13 +114,6 @@ namespace Game
             for(int i = 0; i < vertices.Length; i++)
             {
                 transformedVertices[i] = transformMat.mul(vertices[i]);
-            }
-
-            TextureComponent texture = (TextureComponent)components[1];
-
-            if(texture != null)
-            {
-                texture.texture.bind(0);
             }
 
             GL.PushMatrix();
@@ -120,22 +137,15 @@ namespace Game
     {
         public Game(Window window)
         {
-            TransformComponent transformComponent = new TransformComponent(new Transform());
-            transformComponent.transform.setScale(new Vector2(0.3f, 0.3f));
+            getECS().makeEntity(new TransformComponent(new Transform(new Vector2(-1, -1), 0, new Vector2(0.2, 0.2))),
+            new VelocityComponent(new Vector2(0.3, 0.3)),
+            new ColliderComponent(new AABB(new Vector2(-0.2, -0.2), new Vector2(0.2, 0.2))));
+            getECS().makeEntity(new TransformComponent(new Transform(new Vector2(1, 1), 0, new Vector2(0.2, 0.2))),
+            new VelocityComponent(new Vector2(-0.3, -0.3)),
+            new ColliderComponent(new AABB(new Vector2(-0.2, -0.2), new Vector2(0.2, 0.2))));
 
-            InputComponent inputComp = new InputComponent();
-            inputComp.up = new KeyButton(window.getInput(), glfw3.Key.W);
-            inputComp.down = new KeyButton(window.getInput(), glfw3.Key.S);
-            inputComp.left = new KeyButton(window.getInput(), glfw3.Key.A);
-            inputComp.right = new KeyButton(window.getInput(), glfw3.Key.D);
-
-            TextureComponent texcomp = new TextureComponent();
-            texcomp.texture = new Texture("./res/textures/wood.jpg", (float)TextureMinFilter.Linear);
-
-            getECS().makeEntity(transformComponent, inputComp, texcomp);
-
-            addSceneSystem(new MovementSystem());
-
+            addSimulatorSystem(new RectSimulator());
+            addCollisionDetectionSystem(new RectColliderSys());
             getRenderPipeLine().addSystem(new RectRenderer());
         }
 
