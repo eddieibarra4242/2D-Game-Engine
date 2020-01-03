@@ -12,81 +12,6 @@ using System.Collections.Generic;
 
 namespace Game
 {
-    public class VelocityComponent : BaseComponent
-    {
-        public Vector2 velocity;
-
-        public VelocityComponent(Vector2 velocity)
-        {
-            this.velocity = velocity;
-        }
-    }
-
-    public class ColliderComponent : BaseComponent
-    {
-        public AABB collider;
-
-        public ColliderComponent(AABB collider)
-        {
-            this.collider = collider;
-        }
-    }
-
-    public class RectSimulator : BaseSystem
-    {
-        public RectSimulator()
-        {
-            addComponentType(typeof(TransformComponent));
-            addComponentType(typeof(VelocityComponent));
-        }
-        
-        public override void componentUpdate(BaseComponent[] components, double delta)
-        {
-            Transform transform = ((TransformComponent)components[0]).transform;
-            VelocityComponent vel = (VelocityComponent)components[1];
-
-            Vector2 newPosition = transform.getPosition();
-            MotionIntegrators.forestRuth(delta, ref newPosition, ref vel.velocity, new Vector2(0, 0));
-            transform.setPosition(newPosition);
-        }
-    }
-
-    public class RectColliderSys : BaseSystem
-    {
-        private List<AABB> colliders;
-
-        public RectColliderSys()
-        {
-            addComponentType(typeof(TransformComponent));
-            addComponentType(typeof(ColliderComponent));
-
-            colliders = new List<AABB>();
-        }
-
-        public override void componentUpdate(BaseComponent[] components, double delta)
-        {
-            Transform transform = ((TransformComponent)components[0]).transform;
-            ColliderComponent coll = (ColliderComponent)components[1];
-
-            coll.collider.translate(transform.getPosition());
-
-            colliders.Add(coll.collider);
-        }
-
-        public override void postComponentUpdate(double delta)
-        {
-            for(int i = 0; i < colliders.Count; i++)
-            {
-                for(int j = i + 1; j < colliders.Count; j++)
-                {
-                    Console.WriteLine(colliders[i].intersect(colliders[j]));
-                }
-            }
-
-            colliders.Clear();
-        }
-    }
-
     public class RectRenderer : BaseSystem
     {
         private Vector2[] vertices;
@@ -137,15 +62,11 @@ namespace Game
     {
         public Game(Window window)
         {
-            getECS().makeEntity(new TransformComponent(new Transform(new Vector2(-1, -1), 0, new Vector2(0.2, 0.2))),
-            new VelocityComponent(new Vector2(0.3, 0.3)),
-            new ColliderComponent(new AABB(new Vector2(-0.2, -0.2), new Vector2(0.2, 0.2))));
-            getECS().makeEntity(new TransformComponent(new Transform(new Vector2(1, 1), 0, new Vector2(0.2, 0.2))),
-            new VelocityComponent(new Vector2(-0.3, -0.3)),
-            new ColliderComponent(new AABB(new Vector2(-0.2, -0.2), new Vector2(0.2, 0.2))));
+            getECS().addEntity(new RigidBody(new Transform(new Vector2(-0.75, 0), 0, new Vector2(0.2, 0.2)), 1));
+            getECS().addEntity(new RigidBody(new Transform(new Vector2(0.75, 0), 0, new Vector2(0.2, 0.2)), 1));
 
-            addSimulatorSystem(new RectSimulator());
-            addCollisionDetectionSystem(new RectColliderSys());
+            addSimulatorSystem(new RigidBodySimulator(false));
+
             getRenderPipeLine().addSystem(new RectRenderer());
         }
 

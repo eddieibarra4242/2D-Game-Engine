@@ -6,9 +6,7 @@ Rendering:
         -frame timing system?
     -tilemaps
 Physics:
-    -integration
-    -colliders (AABB and Sphere)
-    -collision
+    -collision response
 Misc:
     -loading and saving levels
         -tilemaps (actual level)

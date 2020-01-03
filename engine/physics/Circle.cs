@@ -23,7 +23,7 @@ namespace engine.physics
             Vector2 centerDist = center - circle.getCenter();
             double idealDist = (radius + circle.getRadius());
 
-            if(centerDist.length() <= idealDist)
+            if(centerDist.length() < idealDist)
             {
                 return centerDist.normalized() * (idealDist - centerDist.length());
             }

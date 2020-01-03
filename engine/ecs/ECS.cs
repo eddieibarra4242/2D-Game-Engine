@@ -22,12 +22,34 @@ namespace engine.ecs
         public Entity addEntity(Entity entity)
         {
             entities.Add(entity);
+
+            if(entity.getID() != (Entity.getNextEntityID() - 1))
+            {
+                entity.relist();
+            }
+
             return entity;
         }
 
         public void removeEntity(Entity entity)
         {
             entities.Remove(entity);
+            entity.unlist();
+        }
+
+        public Entity getEntity(int entityID)
+        {
+            Entity result = null;
+
+            for(int i = 0; i < entities.Count; i++)
+            {
+                if(entities[i].getID() == entityID)
+                {
+                    result = entities[i];
+                }
+            }
+
+            return result;
         }
 
         public void updateSystems(SystemList systems, double delta)

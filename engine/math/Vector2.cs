@@ -18,6 +18,11 @@ namespace engine.math
             return Math.Sqrt(x * x + y * y);
         }
 
+        public double cross(Vector2 r)
+        {
+            return x * r.getY() - y * r.getX();
+        }
+
         public double dot(Vector2 r)
         {
             return x * r.getX() + y * r.getY();

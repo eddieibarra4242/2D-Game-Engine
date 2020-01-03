@@ -8,6 +8,11 @@ namespace engine.ecs
         {
             private static int entityCounter = 0;
 
+            public static int getNextEntityID()
+            {
+                return entityCounter;
+            }
+
             public static int getEntityID()
             {
                 return entityCounter++;
@@ -39,11 +44,37 @@ namespace engine.ecs
         {
             components.Remove(component);
             ComponentRegistry.removeFromRegistry(component);
-        } 
+        }
+
+        public void unlist()
+        {
+            for(int i = 0; i < components.Count; i++)
+            {
+                ComponentRegistry.removeFromRegistry(components[i]);
+            }
+        }
+
+        public void relist()
+        {
+            for(int i = 0; i < components.Count; i++)
+            {
+                ComponentRegistry.register(components[i]);
+            }
+        }
 
         public int size()
         {
             return components.Count;
+        }
+
+        public int getID()
+        {
+            return entityID;
+        }
+
+        public static int getNextEntityID()
+        {
+            return EntityRegistry.getNextEntityID();
         }
 
         public BaseComponent this[int key]

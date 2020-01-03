@@ -7,6 +7,8 @@ namespace engine.components
     {
         public Transform transform;
         
+        public TransformComponent() : this(new Transform()) { }
+
         public TransformComponent(Transform transform)
         {
             this.transform = transform;
