@@ -1,9 +1,22 @@
+using System;
+using System.Collections.Generic;
+
 using engine.components;
 using engine.ecs;
 using engine.math;
 
 namespace engine.physics
 {
+    public class ForceAccumulator : BaseComponent
+    {
+        public Dictionary<Vector2, Vector2> forceAccum;
+
+        public ForceAccumulator()
+        {
+            forceAccum = new Dictionary<Vector2, Vector2>();
+        }
+    }
+
     public class PhysicalDefinition : BaseComponent
     {
         public double inverseMass;
@@ -36,6 +49,28 @@ namespace engine.physics
         {
             addComponent(new TransformComponent(transform));
             addComponent(new PhysicalDefinition(mass));
+            addComponent(new ForceAccumulator());
+        }
+
+        // this needs to be redone using a different method
+
+        public Vector2 addForce(Vector2 force, Vector2 forceOffset)
+        {
+            getForceAccum().forceAccum.Add(force, forceOffset);
+
+            return force;
+        }
+
+        public void removeForce(Vector2 force)
+        {
+            getForceAccum().forceAccum.Remove(force);
+        }
+
+        //
+
+        private ForceAccumulator getForceAccum()
+        {
+            return ((ForceAccumulator)this[2]);
         }
 
         public Transform getTransform()
@@ -76,37 +111,26 @@ namespace engine.physics
 
     public class RigidBodySimulator : BaseSystem
     {
-        private bool gravity;
-        private Vector2 g;
-
         public RigidBodySimulator(bool gravity)
         {
             addComponentType(typeof(TransformComponent));
             addComponentType(typeof(PhysicalDefinition));
-
-            this.gravity = gravity;
-            g = new Vector2(0, -9.81);
+            addComponentType(typeof(ForceAccumulator));
         }
 
         public override void componentUpdate(BaseComponent[] components, double delta)
         {
             Transform transform = ((TransformComponent)components[0]).transform;
             PhysicalDefinition physDef = ((PhysicalDefinition)components[1]);
+            Dictionary<Vector2, Vector2> forceAccum = ((ForceAccumulator)components[2]).forceAccum;
 
-            //i should really do a force update here
+            MotionIntegrators.forceUpdate(forceAccum, 0 /*TODO: add torque accumulator*/, physDef.inverseMass, physDef.inverseMomentOfInertia, 
+                                            ref physDef.acceleration, ref physDef.angularAcceleration);
             
             Vector2 newPosition = transform.getPosition();
             double newAngle = transform.getRotation();
 
-            if(gravity)
-            {
-                MotionIntegrators.forestRuth(delta, ref newPosition, ref physDef.velocity, g);
-            }
-            else
-            {
-                MotionIntegrators.forestRuth(delta, ref newPosition, ref physDef.velocity, physDef.acceleration);
-            }
-
+            MotionIntegrators.forestRuth(delta, ref newPosition, ref physDef.velocity, physDef.acceleration);
             MotionIntegrators.rotationForestRuth(delta, ref newAngle, ref physDef.angularVelocity, physDef.angularAcceleration);
 
             transform.setPosition(newPosition);

@@ -4,6 +4,9 @@ namespace engine.math
 {
     public class Vector2
     {
+        public readonly static Vector2 zero = new Vector2(0, 0);
+        public readonly static Vector2 one = new Vector2(1, 1);
+
         private double x;
         private double y;
 
@@ -106,6 +109,21 @@ namespace engine.math
         public static Vector2 operator /(Vector2 v1, Vector2 v2)
         {
             return new Vector2(v1.getX() / v2.getX(), v1.getY() / v2.getY());
+        }
+
+        public static bool operator ==(Vector2 v1, Vector2 v2)
+        {
+            if(object.ReferenceEquals(v1, null) || object.ReferenceEquals(v2, null))
+            {
+                return object.ReferenceEquals(v1, null) && object.ReferenceEquals(v2, null);
+            }
+
+            return v1.getX() == v2.getX() && v1.getY() == v2.getY();
+        }
+
+        public static bool operator !=(Vector2 v1, Vector2 v2)
+        {
+            return !(v1 == v2);
         }
 
         public static Vector2 min(Vector2 r1, Vector2 r2)

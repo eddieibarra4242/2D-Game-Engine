@@ -8,11 +8,6 @@ namespace engine.ecs
         {
             private static int entityCounter = 0;
 
-            public static int getNextEntityID()
-            {
-                return entityCounter;
-            }
-
             public static int getEntityID()
             {
                 return entityCounter++;
@@ -20,11 +15,13 @@ namespace engine.ecs
         }
 
         private int entityID;
+        private bool isListed;
         private List<BaseComponent> components;
 
         public Entity(params BaseComponent[] comps)
         {
             entityID = EntityRegistry.getEntityID();
+            isListed = true;
             components = new List<BaseComponent>();
 
             foreach(BaseComponent comp in comps)
@@ -48,18 +45,32 @@ namespace engine.ecs
 
         public void unlist()
         {
+            if(!isListed)
+            {
+                return;
+            }
+
             for(int i = 0; i < components.Count; i++)
             {
                 ComponentRegistry.removeFromRegistry(components[i]);
             }
+
+            isListed = false;
         }
 
         public void relist()
         {
+            if(isListed)
+            {
+                return;
+            }
+
             for(int i = 0; i < components.Count; i++)
             {
                 ComponentRegistry.register(components[i]);
             }
+
+            isListed = true;
         }
 
         public int size()
@@ -70,11 +81,6 @@ namespace engine.ecs
         public int getID()
         {
             return entityID;
-        }
-
-        public static int getNextEntityID()
-        {
-            return EntityRegistry.getNextEntityID();
         }
 
         public BaseComponent this[int key]

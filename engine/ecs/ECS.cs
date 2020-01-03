@@ -22,12 +22,7 @@ namespace engine.ecs
         public Entity addEntity(Entity entity)
         {
             entities.Add(entity);
-
-            if(entity.getID() != (Entity.getNextEntityID() - 1))
-            {
-                entity.relist();
-            }
-
+            entity.relist();
             return entity;
         }
 

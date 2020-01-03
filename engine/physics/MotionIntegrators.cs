@@ -1,17 +1,37 @@
 using engine.math;
-
 using System;
+using System.Collections.Generic;
 
 namespace engine.physics
 {
     public static class MotionIntegrators
     {
-        public static void forceUpdate(Vector2 force, double torque, Vector2 forceOffset, double inverseMass, double inverseMomentOfInertia, ref Vector2 acceleration, ref double angularAcceleration) 
+        public static void forceUpdate(Dictionary<Vector2, Vector2> forces, double torqueAccum, double inverseMass, double inverseMomentOfInertia, ref Vector2 acceleration, ref double angularAcceleration) 
         {
-            torque += force.cross(forceOffset);
+            Vector2 forceAccum = new Vector2(0, 0);
 
-            acceleration = force * inverseMass;
-            angularAcceleration = torque * inverseMomentOfInertia;
+            foreach(KeyValuePair<Vector2, Vector2> forceDef in forces)
+            {
+                Vector2 force = forceDef.Key;
+                Vector2 forceOffset = forceDef.Value;
+
+                if(force == null || forceOffset == null)
+                {
+                    continue; // I'm not gonna babysit problem children
+                }
+
+                if(forceOffset == Vector2.zero)
+                {
+                    forceAccum += force;
+                    continue;
+                }
+
+                torqueAccum += forceOffset.cross(force);
+                forceAccum += forceOffset.normalized() * (force.dot(forceOffset));
+            }
+
+            acceleration = forceAccum * inverseMass;
+            angularAcceleration = torqueAccum * inverseMomentOfInertia;
         }
 
         public static void verlet(double delta, ref Vector2 position, ref Vector2 velocity, Vector2 acceleration)
