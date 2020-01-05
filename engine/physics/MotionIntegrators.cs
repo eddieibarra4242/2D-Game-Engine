@@ -6,14 +6,14 @@ namespace engine.physics
 {
     public static class MotionIntegrators
     {
-        public static void forceUpdate(Dictionary<Vector2, Vector2> forces, double torqueAccum, double inverseMass, double inverseMomentOfInertia, ref Vector2 acceleration, ref double angularAcceleration) 
+        public static void forceUpdate(List<Vector2> forces, List<Vector2> forceOffsets, double torqueAccum, double inverseMass, double inverseMomentOfInertia, ref Vector2 acceleration, ref double angularAcceleration) 
         {
             Vector2 forceAccum = new Vector2(0, 0);
 
-            foreach(KeyValuePair<Vector2, Vector2> forceDef in forces)
+            for(int i = 0; i < forces.Count; i++)
             {
-                Vector2 force = forceDef.Key;
-                Vector2 forceOffset = forceDef.Value;
+                Vector2 force = forces[i];
+                Vector2 forceOffset = forceOffsets[i];
 
                 if(force == null || forceOffset == null)
                 {

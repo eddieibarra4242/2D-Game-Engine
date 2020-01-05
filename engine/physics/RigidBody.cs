@@ -7,18 +7,22 @@ using engine.math;
 
 namespace engine.physics
 {
-    public class ForceAccumulator : BaseComponent
+    public class ForceAndTorqueAccumulator : BaseComponent
     {
-        public Dictionary<Vector2, Vector2> forceAccum;
+        public Dictionary<Force, Vector2> forceAccum;
+        public List<Torque> torques;
 
-        public ForceAccumulator()
+        public ForceAndTorqueAccumulator()
         {
-            forceAccum = new Dictionary<Vector2, Vector2>();
+            forceAccum = new Dictionary<Force, Vector2>();
+            torques = new List<Torque>();
         }
     }
 
     public class PhysicalDefinition : BaseComponent
     {
+        public RigidBody parent;
+
         public double inverseMass;
         public double inverseMomentOfInertia;
 
@@ -28,8 +32,10 @@ namespace engine.physics
         public double angularVelocity;
         public double angularAcceleration;
 
-        public PhysicalDefinition(double mass)
+        public PhysicalDefinition(RigidBody parent, double mass)
         {
+            this.parent = parent;
+
             double moi = 1; //TODO Calc this
 
             inverseMass = 1.0 / mass;
@@ -48,29 +54,35 @@ namespace engine.physics
         public RigidBody(Transform transform, double mass)
         {
             addComponent(new TransformComponent(transform));
-            addComponent(new PhysicalDefinition(mass));
-            addComponent(new ForceAccumulator());
+            addComponent(new PhysicalDefinition(this, mass));
+            addComponent(new ForceAndTorqueAccumulator());
         }
 
-        // this needs to be redone using a different method
-
-        public Vector2 addForce(Vector2 force, Vector2 forceOffset)
+        public Force addForce(Force force, Vector2 forceOffset)
         {
             getForceAccum().forceAccum.Add(force, forceOffset);
-
             return force;
         }
 
-        public void removeForce(Vector2 force)
+        public void removeForce(Force force)
         {
             getForceAccum().forceAccum.Remove(force);
         }
 
-        //
-
-        private ForceAccumulator getForceAccum()
+        public Torque addTorque(Torque torque)
         {
-            return ((ForceAccumulator)this[2]);
+            getForceAccum().torques.Add(torque);
+            return torque;
+        }
+
+        public void removeTorque(Torque torque)
+        {
+            getForceAccum().torques.Remove(torque);
+        }
+
+        private ForceAndTorqueAccumulator getForceAccum()
+        {
+            return ((ForceAndTorqueAccumulator)this[2]);
         }
 
         public Transform getTransform()
@@ -111,21 +123,43 @@ namespace engine.physics
 
     public class RigidBodySimulator : BaseSystem
     {
+        private List<Vector2> forces;
+        private List<Vector2> offsets;
+
         public RigidBodySimulator(bool gravity)
         {
             addComponentType(typeof(TransformComponent));
             addComponentType(typeof(PhysicalDefinition));
-            addComponentType(typeof(ForceAccumulator));
+            addComponentType(typeof(ForceAndTorqueAccumulator));
+
+            forces = new List<Vector2>();
+            offsets = new List<Vector2>();
         }
 
         public override void componentUpdate(BaseComponent[] components, double delta)
         {
             Transform transform = ((TransformComponent)components[0]).transform;
             PhysicalDefinition physDef = ((PhysicalDefinition)components[1]);
-            Dictionary<Vector2, Vector2> forceAccum = ((ForceAccumulator)components[2]).forceAccum;
+            ForceAndTorqueAccumulator forceTorqueAccum = ((ForceAndTorqueAccumulator)components[2]);
 
-            MotionIntegrators.forceUpdate(forceAccum, 0 /*TODO: add torque accumulator*/, physDef.inverseMass, physDef.inverseMomentOfInertia, 
+            foreach(KeyValuePair<Force, Vector2> kvp in forceTorqueAccum.forceAccum)
+            {
+                forces.Add(kvp.Key.generateForce(physDef.parent));
+                offsets.Add(kvp.Value);
+            }
+
+            double torqueAccum = 0;
+
+            foreach(Torque torque in forceTorqueAccum.torques)
+            {
+                torqueAccum += torque.generateTorque(physDef.parent);
+            }
+
+            MotionIntegrators.forceUpdate(forces, offsets, torqueAccum, physDef.inverseMass, physDef.inverseMomentOfInertia, 
                                             ref physDef.acceleration, ref physDef.angularAcceleration);
+
+            forces.Clear();
+            offsets.Clear();
             
             Vector2 newPosition = transform.getPosition();
             double newAngle = transform.getRotation();

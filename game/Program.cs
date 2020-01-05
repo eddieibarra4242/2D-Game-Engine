@@ -55,22 +55,32 @@ namespace Game
         }
     }
 
+    public class Gravity : Force
+    {
+        private Vector2 g;
+
+        public Gravity() : base()
+        {
+            this.g = new Vector2(0, -9.81);
+        }
+
+        public override Vector2 generateForce(RigidBody body)
+        {
+            return g * body.getMass();
+        }
+    }
+
     public class Game : Scene
     {
-        RigidBody r1;
-        RigidBody r2;
-        Vector2 r1Force;
-        Vector2 r2Force;
-
         public Game(Window window)
         {
-            Vector2 g = new Vector2(0, -9.81);
+            Gravity g = new Gravity();
 
-            r1 = new RigidBody(new Transform(new Vector2(-0.75, 0), 0, new Vector2(0.2, 0.2)), 1);
-            r2 = new RigidBody(new Transform(new Vector2(0.75, 0), 0, new Vector2(0.2, 0.2)), 1);
+            RigidBody r1 = new RigidBody(new Transform(new Vector2(-0.75, 0), 0, new Vector2(0.2, 0.2)), 1);
+            RigidBody r2 = new RigidBody(new Transform(new Vector2(0.75, 0), 0, new Vector2(0.2, 0.2)), 1);
 
-            r1Force = r1.addForce(g * r1.getMass(), new Vector2(0, 0));
-            r2Force = r2.addForce(g * r2.getMass(), new Vector2(0, 0));
+            r1.addForce(g, new Vector2(0, 0));
+            r2.addForce(g, new Vector2(0, 0));
 
             getECS().addEntity(r1);
             getECS().addEntity(r2);
@@ -80,40 +90,9 @@ namespace Game
             getRenderPipeLine().addSystem(new RectRenderer());
         }
 
-        private bool r1l = true;
-        private bool r2l = true;
-
-        private double bounds = 0.2;
-
         public override bool update(double delta)
         {
-            if((r1.getTransform().getPosition().getY() <= -bounds || r1.getTransform().getPosition().getY() >= bounds) && r1l)
-            {
-                r1.removeForce(r1Force);
-                r1Force *= -1;
-                r1Force = r1.addForce(r1Force, Vector2.zero);
-                r1l = false;
-            }
-
-            if((r2.getTransform().getPosition().getY() <= -bounds || r2.getTransform().getPosition().getY() >= bounds) && r2l)
-            {
-                r2.removeForce(r2Force);
-                r2Force *= -1;
-                r2Force = r2.addForce(r2Force, Vector2.zero);
-                r2l = false;
-            }
-
-            if(r1.getTransform().getPosition().getY() > -bounds && r1.getTransform().getPosition().getY() < bounds)
-            {
-                r1l = true;
-            }
-
-            if(r2.getTransform().getPosition().getY() > -bounds && r2.getTransform().getPosition().getY() < bounds)
-            {
-                r2l = true;
-            }
-
-            return r1.getVelocity().length() > 20 || r2.getVelocity().length() > 20;
+            return false;
         }
 
         public override void render(double delta)
@@ -126,7 +105,7 @@ namespace Game
     {
         public static void Main(string[] args)
         {
-            Window window = new Window(1600, 900, "2D Engine");
+            Window window = new Window(1280, 720, "2D Engine");
             Engine engine = new Engine(window, new Game(window), 60);
             engine.run();
         }
