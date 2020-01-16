@@ -36,7 +36,7 @@ namespace engine.physics
         {
             this.parent = parent;
 
-            double moi = 1; //TODO Calc this
+            double moi = mass * Math.Pow(parent.getTransform().getScale().getX() * 2, 2) / 12; //TODO Calc this
 
             inverseMass = 1.0 / mass;
             inverseMomentOfInertia = 1.0 / (moi);
@@ -126,7 +126,7 @@ namespace engine.physics
         private List<Vector2> forces;
         private List<Vector2> offsets;
 
-        public RigidBodySimulator(bool gravity)
+        public RigidBodySimulator()
         {
             addComponentType(typeof(TransformComponent));
             addComponentType(typeof(PhysicalDefinition));
@@ -144,7 +144,7 @@ namespace engine.physics
 
             foreach(KeyValuePair<Force, Vector2> kvp in forceTorqueAccum.forceAccum)
             {
-                forces.Add(kvp.Key.generateForce(physDef.parent));
+                forces.Add(kvp.Key.generateForce(physDef.parent, kvp.Value));
                 offsets.Add(kvp.Value);
             }
 

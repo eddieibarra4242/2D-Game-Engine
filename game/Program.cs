@@ -1,4 +1,6 @@
-﻿using engine;
+﻿using System;
+
+using engine;
 using engine.math;
 using engine.rendering;
 using engine.ecs;
@@ -64,7 +66,7 @@ namespace Game
             this.g = new Vector2(0, -9.81);
         }
 
-        public override Vector2 generateForce(RigidBody body)
+        public override Vector2 generateForce(RigidBody body, Vector2 attachmentPoint)
         {
             return g * body.getMass();
         }
@@ -76,17 +78,13 @@ namespace Game
         {
             Gravity g = new Gravity();
 
-            RigidBody r1 = new RigidBody(new Transform(new Vector2(-0.75, 0), 0, new Vector2(0.2, 0.2)), 1);
-            RigidBody r2 = new RigidBody(new Transform(new Vector2(0.75, 0), 0, new Vector2(0.2, 0.2)), 1);
+            RigidBody r1 = new RigidBody(new Transform(new Vector2(0, 0), 0, new Vector2(0.2, 0.2)), 100);
 
             r1.addForce(g, new Vector2(0, 0));
-            r2.addForce(g, new Vector2(0, 0));
 
             getECS().addEntity(r1);
-            getECS().addEntity(r2);
 
-            addSimulatorSystem(new RigidBodySimulator(true));
-
+            addSimulatorSystem(new RigidBodySimulator());
             getRenderPipeLine().addSystem(new RectRenderer());
         }
 

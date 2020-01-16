@@ -27,7 +27,7 @@ namespace engine.physics
                 }
 
                 torqueAccum += forceOffset.cross(force);
-                forceAccum += forceOffset.normalized() * (force.dot(forceOffset));
+                forceAccum += forceOffset.normalized() * (force.dot(forceOffset)); // learn rigid body dynamics ya dummy head
             }
 
             acceleration = forceAccum * inverseMass;

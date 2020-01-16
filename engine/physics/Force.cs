@@ -21,7 +21,7 @@ namespace engine.physics
             return force;
         }
 
-        public virtual Vector2 generateForce(RigidBody body)
+        public virtual Vector2 generateForce(RigidBody body, Vector2 attachmentPoint)
         {
             return force;
         }
